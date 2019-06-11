@@ -1,0 +1,21 @@
+{
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "CFG": true,
+    "process": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "quotes": [
+      2,
+      "single"
+    ],
+    "semi": [
+      2,
+      "always"
+    ]
+  }
+}

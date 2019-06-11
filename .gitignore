@@ -1,0 +1,6 @@
+.idea
+.nyc_output/
+package-lock.json
+node_modules/
+static/doc
+coverage/

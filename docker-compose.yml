@@ -1,0 +1,19 @@
+version: "3"
+services: 
+  node:
+    container_name: "$PROJECT_NAME"
+    image: node:alpine
+    env_file:
+      - .env
+    working_dir: "/home/project/"
+    networks: 
+      - net-project
+    volumes:
+      - .:/home/project/
+      - ../node_modules/:/home/project/node_modules/
+    ports:
+      - "$PUBLIC_PORT:$PORT"
+    command: "npm start"
+networks: 
+  net-project:
+    external: true
