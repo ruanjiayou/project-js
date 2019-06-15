@@ -4,3 +4,6 @@
 - 1.git clone
 - 2.npm i
 - 4.gulp (启动本地测试: gulp dev)
+
+## 改进
+- gulp命令在实例中有问题

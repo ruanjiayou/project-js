@@ -14,10 +14,40 @@ process.on('unhandledRejection', (reason) => {
   console.error(reason);
 });
 
+// 全局开始
+Object.defineProperty(global, 'CFG', {
+  value: {},
+  writable: false,
+  enumerable: true,
+  configurable: false
+});
+
+app.extend = function (obj, bind = false) {
+  for (let fn in obj) {
+    app[fn] = obj[fn];
+    if (typeof obj[fn] === 'function' && bind) {
+      app[fn].bind(this);
+    }
+  }
+};
+app.define = function (key, value) {
+  global.CFG[key] = value;
+};
+app.defineMulti = function (o) {
+  for (let k in o) {
+    this.define(k, o[k]);
+  }
+};
+
 // 全局变量 
 require('dotenv').config({ path: '../.env' });
-require('../config/config.default');
-require(`../config/config.${process.env.NODE_ENV}`);
+app.defineMulti(require('../config/config.default'))
+app.defineMulti(require(`../config/config.${process.env.NODE_ENV}`))
+
+// 框架加载
+app.extend(require('./utils/index'));
+app.extend(require('./extend/application'), true);
+app.loadRoutes(__dirname + '/routes');
 
 /**
  * '_events',
@@ -98,24 +128,11 @@ require(`../config/config.${process.env.NODE_ENV}`);
  * 'locals',
  * 'mountpath'
  */
-app.extend = function (obj, bind = false) {
-  for (let fn in obj) {
-    app[fn] = obj[fn];
-    if (typeof obj[fn] === 'function' && bind) {
-      app[fn].bind(this);
-    }
-  }
-};
-
-app.extend(require('./utils/index'));
-app.extend(require('./extend/application'), true);
-app.loadRoutes(__dirname + '/routes');
-
 app.run = async function (cb) {
   // 实例中的
   require('dotenv').config({ path: this.config.ROOT_PATH + '/.env' });
-  require(`${this.config.CONFIG_PATH}/config.default`);
-  require(`${this.config.CONFIG_PATH}/config.${process.env.NODE_ENV}`);
+  app.defineMulti(require(`${this.config.CONFIG_PATH}/config.default`));
+  app.defineMulti(require(`${this.config.CONFIG_PATH}/config.${process.env.NODE_ENV}`));
   // .安全部分
   this.use(helmet());
 
@@ -163,9 +180,9 @@ app.run = async function (cb) {
     await cb.call(this);
   }
 
-  this.schedule.create('test', '0 */1 * * * *', function () {
-    app.logger('cron').info('excute', 'aaa');
-  }, true);
+  // this.schedule.create('test', '0 */1 * * * *', function () {
+  //   app.logger('cron').info('excute', 'aaa');
+  // }, true);
 
   this.dispatch();
 

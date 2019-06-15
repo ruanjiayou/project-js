@@ -42,7 +42,7 @@ function develop(port, project_name) {
  * 启动项目
  */
 gulp.task('dev', () => {
-  develop(CFG.PORT, CFG.PROJECT_NAME);
+  develop(process.env.PORT, process.env.PROJECT_NAME);
 });
 
 gulp.task('default', ['dev']);
