@@ -73,6 +73,15 @@ module.exports = {
     return res.fail();
   },
   /**
+   * @api {get} /test/res-error 10.测试res添加error()方法
+   */
+  'get /test/res-error': function (req, res, next) {
+    const err = new Error('test');
+    err.unit = 'auth';
+    err.type = 'NoPermission';
+    throw err;
+  },
+  /**
    * @api {put} /test/api-put 11.测试put请求和组合API,原样返回数据
    * @apiGroup test-put
    */

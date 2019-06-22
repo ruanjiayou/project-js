@@ -22,12 +22,12 @@ describe('test所有预期接口', () => {
   it('get /test/image', async () => {
     const { FileBuffer } = app.stream;
     const buff = await FileBuffer(app.shttp.get('/test/image'));
-    assert.strictEqual(buff.length, 510);
+    assert.strictEqual(buff.length, 821);
   });
   it('get /test/download', async () => {
     const { FileBuffer } = app.stream;
     let buff = await FileBuffer(app.shttp.get('/test/download'));
-    assert.strictEqual(buff.length, 510);
+    assert.strictEqual(buff.length, 821);
   });
   it('post /test/upload', async () => {
     const { body: res } = await app.shttp.post('/test/upload').attach('test', './static/logo.jpg');
@@ -48,6 +48,11 @@ describe('test所有预期接口', () => {
   it('get /test/res-fail', async () => {
     const { body } = await app.shttp.get('/test/res-fail');
     assert.deepStrictEqual(body, { state: 'fail', ecode: -1, message: '' });
+  });
+  it('get /test/res-error', async () => {
+    const { body } = await app.shttp.get('/test/res-error');
+    assert.equal(body.state, 'fail');
+    assert.equal(body.ecode, '101030');
   });
   it('get /test/put', async () => {
     const { body } = await app.shttp.put('/test/put').send({ key: 'value' });

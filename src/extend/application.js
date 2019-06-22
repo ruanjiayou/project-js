@@ -1,4 +1,7 @@
+const { scanner } = require('errors-code');
+
 const routes = [];
+
 module.exports = {
   // 应用所有配置
   get config() {
@@ -11,6 +14,10 @@ module.exports = {
   // 加载路由文件
   get loadRoutes() {
     return require('../router');
+  },
+  // 加载业务错误码
+  get errorsCode() {
+    return scanner(this.config.ERRORS_CODE_PATH);
   },
   // 挂载路由
   dispatch() {

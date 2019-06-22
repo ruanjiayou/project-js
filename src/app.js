@@ -8,10 +8,10 @@ const multer = require('multer');
 
 // 全局异常
 process.on('uncaughtException', (err) => {
-  console.error(err);
+  console.error(err, 'uncaughtException');
 });
 process.on('unhandledRejection', (reason) => {
-  console.error(reason);
+  console.error(reason, 'unhandledRejection');
 });
 
 // 全局开始
@@ -186,24 +186,24 @@ app.run = async function (cb) {
 
   this.dispatch();
 
-  // // .默认错误
-  // this.use(function (err, req, res, next) {
-  //   app.logger('project').error('error', `${req.method} ${req.originalUrl} ${err.stack} `);
-  //   if (err) {
-  //     res.header('status', 500);
-  //     res.json({ [CFG.RES_STATUS]: CFG.RES_FAIL });
-  //   }
-  // });
+  // .默认错误
+  this.use(function (err, req, res, next) {
+    app.logger('project').error('error', `${req.method} ${req.originalUrl} ${err.stack} `);
+    if (err) {
+      res.error(err);
+    } else {
+      next();
+    }
+  });
 
-  // // .404处理
-  // this.use(function (req, res, next) {
-  //   if (!res.headersSent) {
-  //     res.header('status', 404);
-  //     res.json({ [CFG.RES_STATUS]: CFG.RES_FAIL });
-  //   } else {
-  //     next();
-  //   }
-  // });
+  // .404处理
+  this.use(function (req, res, next) {
+    if (!res.headersSent) {
+      res.error(new Error('404'));
+    } else {
+      next();
+    }
+  });
 
   if (process.env.NODE_ENV != 'test') {
     this.logger('project').info('start', `${process.env.NODE_ENV} ${process.env.PROJECT_NAME} ${process.env.PORT} `);

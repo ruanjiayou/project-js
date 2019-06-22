@@ -17,6 +17,7 @@
     "cookie-parser": "^1.4.3",
     "cron": "^1.7.1",
     "dotenv": "^7.0.0",
+    "errors-code": "^1.0.2",
     "express": "^4.16.3",
     "gulp": "^3.9.1",
     "gulp-apidoc": "^0.2.8",

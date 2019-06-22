@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const http = require('http');
+const { hinter, tpl } = require('errors-code');
 
 module.exports = {
   /**
@@ -35,6 +36,29 @@ module.exports = {
       res[CFG.RES_MESSAGE] = err.message;
     }
     return res;
+  },
+  // 处理错误业务码和内部错误
+  error(err) {
+    let lang = this.locale || 'zh-cn', unit = '', type = '', params = {};
+    const errorsJson = this.app.errorsCode;
+    if (err instanceof hinter || (err.unit && err.type)) {
+      unit = err.unit;
+      type = err.type;
+      params = err.params;
+    } else if (err.message === '404') {
+      unit = 'common';
+      type = 'apiNotFound';
+    } else {
+      unit = 'common';
+      type = 'internelUnknown';
+      params = err;
+    }
+    const errorJson = errorsJson[lang][unit][type];
+    this.status(errorJson.status);
+    this.json(this.fail({
+      code: errorJson.code,
+      message: typeof errorJson.message === 'funciton' ? errorJson.message(params) : tpl(errorJson.message, params)
+    }));
   },
   paginator(data) {
     return this.success(data || []);

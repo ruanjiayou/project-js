@@ -17,6 +17,8 @@ module.exports = {
   'UPLOAD_PATH': `${root_path}/upload`,
   // 日志文件路径
   'LOG_PATH': `${root_path}/log`,
+  // 业务错误码路径
+  'ERRORS_CODE_PATH': `${root_path}/src/errors-code`,
 
   // 约定名称
   // 请求约定字段
