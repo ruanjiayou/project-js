@@ -33,6 +33,7 @@ module.exports = {
   'RES_DATA': 'rdata',
   'RES_CODE': 'ecode',
   'RES_MESSAGE': 'message',
+  'RES_STACK': 'stack',
   // 约定分页字段
   'RES_PAGER': 'pager',
   'RES_PAGER_PAGE': 'page',

@@ -21,12 +21,12 @@ Object.defineProperty(global, 'CFG', {
   enumerable: true,
   configurable: false
 });
-
+app.utils = {};
 app.extend = function (obj, bind = false) {
   for (let fn in obj) {
-    app[fn] = obj[fn];
+    app.utils[fn] = obj[fn];
     if (typeof obj[fn] === 'function' && bind) {
-      app[fn].bind(this);
+      app.utils[fn].bind(this);
     }
   }
 };
@@ -128,7 +128,7 @@ app.loadRoutes(__dirname + '/routes');
  * 'locals',
  * 'mountpath'
  */
-app.run = async function (cb) {
+app.run = async function (cb, callback) {
   // 实例中的
   require('dotenv').config({ path: this.config.ROOT_PATH + '/.env' });
   app.defineMulti(require(`${this.config.CONFIG_PATH}/config.default`));
@@ -207,9 +207,10 @@ app.run = async function (cb) {
 
   if (process.env.NODE_ENV != 'test') {
     this.logger('project').info('start', `${process.env.NODE_ENV} ${process.env.PROJECT_NAME} ${process.env.PORT} `);
-    this.listen(process.env.PORT, '0.0.0.0', () => {
+    const server = this.listen(process.env.PORT, '0.0.0.0', () => {
       console.log(`项目 ${process.env.PROJECT_NAME} 已启动:端口(${process.env.PORT})`);
     });
+    callback && callback(server);
   }
 
 };

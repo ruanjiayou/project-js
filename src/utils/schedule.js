@@ -8,7 +8,7 @@ class Schedule {
     console.log(`${name} 任务已添加.`);
     this.prototype.tasks.push({ name, job, cb });
     if (!!start) {
-      Schedule.start(name);
+      // Schedule.start(name);
     }
     return job;
   }

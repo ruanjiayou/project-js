@@ -29,11 +29,13 @@ module.exports = {
     let res = {
       [CFG.RES_STATUS]: CFG.RES_FAIL,
       [CFG.RES_CODE]: -1,
-      [CFG.RES_MESSAGE]: ''
+      [CFG.RES_MESSAGE]: '',
+      [CFG.RES_STACK]: null,
     };
     if (!_.isEmpty(err)) {
       res[CFG.RES_CODE] = err.code;
       res[CFG.RES_MESSAGE] = err.message;
+      res[CFG.RES_STACK] = err.stack;
     }
     return res;
   },
@@ -57,7 +59,8 @@ module.exports = {
     this.status(errorJson.status);
     this.json(this.fail({
       code: errorJson.code,
-      message: typeof errorJson.message === 'funciton' ? errorJson.message(params) : tpl(errorJson.message, params)
+      message: typeof errorJson.message === 'funciton' ? errorJson.message(params) : tpl(errorJson.message, params),
+      stack: errorJson.stack,
     }));
   },
   paginator(data) {

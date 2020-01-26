@@ -1,7 +1,7 @@
 module.exports = function (req, res, next) {
   let CORS = req.app.config.CORS;
   if (CORS.origins === '*') {
-    res.header('Access-Control-Allow-Origin', req.headers.referer);
+    res.header('Access-Control-Allow-Origin', req.headers.referer || '*');
   } else if (CORS.origins instanceof Array) {
     res.header('Access-Control-Allow-Origin', CORS.origins.join(','));
   }
