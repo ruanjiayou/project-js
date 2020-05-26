@@ -41,11 +41,11 @@ app.defineMulti = function (o) {
 
 // 全局变量 
 require('dotenv').config({ path: '../.env' });
-app.defineMulti(require('../config/config.default'))
-app.defineMulti(require(`../config/config.${process.env.NODE_ENV}`))
+app.defineMulti(require('../config/config.default'));
+app.defineMulti(require(`../config/config.${process.env.NODE_ENV}`));
 
 // 框架加载
-app.extend(require('./utils/index'));
+app.extend(require('./utils/index'), true);
 app.extend(require('./extend/application'), true);
 app.loadRoutes(__dirname + '/routes');
 
@@ -180,9 +180,10 @@ app.run = async function (cb, callback) {
     await cb.call(this);
   }
 
-  // this.schedule.create('test', '0 */1 * * * *', function () {
-  //   app.logger('cron').info('excute', 'aaa');
-  // }, true);
+  // 定时任务
+  // this.schedule.load(require('./schedules/test.js'), this);
+  // this.schedule.tick('test');
+  // this.schedule.start('test');
 
   this.dispatch();
 
