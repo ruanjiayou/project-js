@@ -21,12 +21,11 @@ Object.defineProperty(global, 'CFG', {
   enumerable: true,
   configurable: false
 });
-app.utils = {};
 app.extend = function (obj, bind = false) {
   for (let fn in obj) {
-    app.utils[fn] = obj[fn];
+    app[fn] = obj[fn];
     if (typeof obj[fn] === 'function' && bind) {
-      app.utils[fn].bind(this);
+      app[fn].bind(this);
     }
   }
 };

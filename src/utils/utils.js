@@ -3,7 +3,7 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const crypto = require('crypto');
 
-module.exports = class IO {
+class IO {
   // 根据格式生成path
   static formater(date, format, filename) {
     var res = format,
@@ -344,3 +344,9 @@ module.exports = class IO {
     return res;
   }
 };
+
+
+// excel简单解析和创建
+IO.excel = require('./excel');
+
+module.exports = IO;

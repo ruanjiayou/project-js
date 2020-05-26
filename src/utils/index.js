@@ -19,10 +19,6 @@ module.exports = {
   get logger() {
     return require('./logger');
   },
-  // excel简单解析和创建
-  get excel() {
-    return require('./excel');
-  },
   // 定时器
   schedule: require('./schedule'),
 };

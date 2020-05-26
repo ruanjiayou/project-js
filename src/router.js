@@ -36,7 +36,7 @@ function adjustRoutes(arr) {
 
 module.exports = function (dir) {
   let app = this;
-  app.utils.loader({
+  app.loader({
     dir: path.normalize(dir),
     recusive: true
   }, function (info) {
