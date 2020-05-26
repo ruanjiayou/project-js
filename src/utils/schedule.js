@@ -1,36 +1,46 @@
 const Job = require('cron').CronJob;
 
 class Schedule {
-  static create(name, params, cb, start) {
-    let job = new Job(params, function () {
-      cb.call(Schedule, name);
-    }, null, !!start, 'Asia/Shanghai');
-    console.log(`${name} 任务已添加.`);
-    this.prototype.tasks.push({ name, job, cb });
-    if (!!start) {
-      Schedule.start(name);
-    }
-    return job;
-  }
-  static cancel(name) {
-    let task = this.prototype.tasks.find(j => j.name == name);
-    if (task) {
-      console.log(`${name} 任务已取消.`);
-      task.job.stop();
-    } else {
-      console.log(`${name} 任务不存在.`);
+  static load(schedules = {}, ctx) {
+    // name time tick
+    for (let name in schedules) {
+      const schedule = schedules[name];
+      Schedule.tasks[name] = {
+        state: 0,
+        job: new Job(schedule.time, function () {
+          this.state = 1;
+          schedule.tick.call(ctx, function () {
+            this.state = 0;
+          });
+        }, null, false, 'Asia/Shanghai')
+      };
     }
   }
+
+  static getTask(name) {
+    return Schedule.tasks[name];
+  }
+
+  static isActive(name) {
+    return Schedule.tasks[name] && Schedule.tasks[name].state === 0;
+  }
+
+  // 手动触发一次
+  static tick(name) {
+    Schedule.tasks[name] && Schedule.tasks[name].job.fireOnTick();
+  }
+
+  // 转为定时
   static start(name) {
-    let task = this.prototype.tasks.find(j => j.name == name);
-    if (task) {
-      task.job.start();
-      task.cb();
-      console.log('cron start:' + name + new Date().toLocaleString());
-    }
+    Schedule.tasks[name] && Schedule.tasks[name].job.start();
+  }
+
+  // 停止定时
+  static stop(name) {
+    Schedule.tasks[name] && Schedule.tasks[name].job.stop();
   }
 }
 
-Schedule.prototype.tasks = [];
+Schedule.tasks = {};
 
 module.exports = Schedule;

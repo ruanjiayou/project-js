@@ -24,7 +24,5 @@ module.exports = {
     return require('./excel');
   },
   // 定时器
-  get schedule() {
-    return require('./schedule');
-  }
+  schedule: require('./schedule'),
 };
