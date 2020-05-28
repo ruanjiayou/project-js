@@ -8,9 +8,12 @@ class Schedule {
       Schedule.tasks[name] = {
         state: 0,
         job: new Job(schedule.time, function () {
-          this.state = 1;
-          schedule.tick.call(ctx, function () {
-            this.state = 0;
+          const task = Schedule.tasks[name];
+          schedule.tick.call(ctx, Schedule.tasks[name]).then(function () {
+            task.state = 0;
+          }).catch(function () {
+            task.state = 0;
+            console.log(`schedule ${name} error`);
           });
         }, null, false, 'Asia/Shanghai')
       };
@@ -27,12 +30,20 @@ class Schedule {
 
   // 手动触发一次
   static tick(name) {
-    Schedule.tasks[name] && Schedule.tasks[name].job.fireOnTick();
+    if (Schedule.tasks[name] && Schedule.tasks[name].state === 0) {
+      Schedule.tasks[name].job.fireOnTick();
+      return true;
+    }
+    return false;
   }
 
   // 转为定时
   static start(name) {
-    Schedule.tasks[name] && Schedule.tasks[name].job.start();
+    if (Schedule.tasks[name]) {
+      Schedule.tasks[name].job.start();
+      return true;
+    }
+    return false;
   }
 
   // 停止定时

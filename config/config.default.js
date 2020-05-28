@@ -44,7 +44,7 @@ module.exports = {
 
   // 跨域
   'CORS': {
-    'origin': '*',
+    'origins': '*',
     'headers': ['X-Token']
   },
 

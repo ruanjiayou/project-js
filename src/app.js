@@ -181,7 +181,8 @@ app.run = async function (cb, callback) {
 
   // 定时任务
   // this.schedule.load(require('./schedules/test.js'), this);
-  // this.schedule.tick('test');
+  // const sres = this.schedule.tick('test');
+  // console.log(sres);
   // this.schedule.start('test');
 
   this.dispatch();
