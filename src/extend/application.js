@@ -1,6 +1,7 @@
 const { scanner } = require('errors-code');
 
 const routes = [];
+const mounts = {};
 
 module.exports = {
   // 应用所有配置
@@ -19,12 +20,21 @@ module.exports = {
   get errorsCode() {
     return scanner(this.config.ERRORS_CODE_PATH);
   },
+  mount(name, fn) {
+    mounts[name] = fn;
+  },
+  mounted(name) {
+    return mounts[name];
+  },
   // 挂载路由
-  dispatch() {
+  dispatch(cb) {
     let app = this;
     app.routes.forEach((route) => {
       app[route.type](route.path, async function (req, res, next) {
         try {
+          if (req.route && cb) {
+            cb.call(app, req);
+          }
           const result = await route.handle.call(app, req, res, next);
           res.format(result);
         } catch (e) {

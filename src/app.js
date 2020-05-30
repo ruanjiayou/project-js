@@ -177,6 +177,26 @@ app.run = async function (cb, callback) {
   // 插入点
   if (cb) {
     await cb.call(this);
+  } else {
+    this.dispatch();
+    // .默认错误
+    this.use(function (err, req, res, next) {
+      app.logger('project').error('error', `${req.method} ${req.originalUrl} ${err.stack} `);
+      if (err) {
+        res.error(err);
+      } else {
+        next();
+      }
+    });
+    // .404处理
+    this.use(function (req, res, next) {
+      if (!res.headersSent) {
+        res.error(new Error('404'));
+      } else {
+        next();
+      }
+    });
+
   }
 
   // 定时任务
@@ -184,27 +204,6 @@ app.run = async function (cb, callback) {
   // const sres = this.schedule.tick('test');
   // console.log(sres);
   // this.schedule.start('test');
-
-  this.dispatch();
-
-  // .默认错误
-  this.use(function (err, req, res, next) {
-    app.logger('project').error('error', `${req.method} ${req.originalUrl} ${err.stack} `);
-    if (err) {
-      res.error(err);
-    } else {
-      next();
-    }
-  });
-
-  // .404处理
-  this.use(function (req, res, next) {
-    if (!res.headersSent) {
-      res.error(new Error('404'));
-    } else {
-      next();
-    }
-  });
 
   if (process.env.NODE_ENV != 'test') {
     this.logger('project').info('start', `${process.env.NODE_ENV} ${process.env.PROJECT_NAME} ${process.env.PORT} `);
