@@ -6,14 +6,17 @@ class Schedule {
     for (let name in schedules) {
       const schedule = schedules[name];
       Schedule.tasks[name] = {
-        state: 0,
+        active: false,
+        runing: false,
+        name,
         job: new Job(schedule.time, function () {
           const task = Schedule.tasks[name];
-          schedule.tick.call(ctx, Schedule.tasks[name]).then(function () {
-            task.state = 0;
+          const task_name = task.name;
+          schedule.tick.call(ctx, Schedule.tasks[task_name]).then(function () {
+            task.runing = false;
           }).catch(function () {
-            task.state = 0;
-            console.log(`schedule ${name} error`);
+            task.runing = false;
+            console.log(`schedule ${task_name} error`);
           });
         }, null, false, 'Asia/Shanghai')
       };
@@ -25,12 +28,17 @@ class Schedule {
   }
 
   static isActive(name) {
-    return Schedule.tasks[name] && Schedule.tasks[name].state === 0;
+    return Schedule.tasks[name] && Schedule.tasks[name].active;
+  }
+
+  static isRuning(name) {
+    return Schedule.tasks[name] && Schedule.tasks[name].runing
   }
 
   // 手动触发一次
   static tick(name) {
-    if (Schedule.tasks[name] && Schedule.tasks[name].state === 0) {
+    if (!Schedule.isRuning(name)) {
+      Schedule.tasks[name].runing = true
       Schedule.tasks[name].job.fireOnTick();
       return true;
     }
@@ -40,6 +48,7 @@ class Schedule {
   // 转为定时
   static start(name) {
     if (Schedule.tasks[name]) {
+      Schedule.tasks[name].active = true
       Schedule.tasks[name].job.start();
       return true;
     }
@@ -48,7 +57,10 @@ class Schedule {
 
   // 停止定时
   static stop(name) {
-    Schedule.tasks[name] && Schedule.tasks[name].job.stop();
+    if (Schedule.tasks[name]) {
+      Schedule.tasks[name].active = false
+      Schedule.tasks[name].job.stop();
+    }
   }
 }
 
