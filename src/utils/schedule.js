@@ -12,11 +12,13 @@ class Schedule {
         job: new Job(schedule.time, function () {
           const task = Schedule.tasks[name];
           const task_name = task.name;
+          task.runing = true
+          console.log('run task:' + task_name, task.runing)
           schedule.tick.call(ctx, Schedule.tasks[task_name]).then(function () {
             task.runing = false;
-          }).catch(function () {
+          }).catch(function (e) {
             task.runing = false;
-            console.log(`schedule ${task_name} error`);
+            console.log(`schedule ${task_name} error:${e.message}`);
           });
         }, null, false, 'Asia/Shanghai')
       };
@@ -38,7 +40,6 @@ class Schedule {
   // 手动触发一次
   static tick(name) {
     if (!Schedule.isRuning(name)) {
-      Schedule.tasks[name].runing = true
       Schedule.tasks[name].job.fireOnTick();
       return true;
     }
