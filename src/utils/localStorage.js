@@ -1,13 +1,21 @@
 const ioHelper = require('./utils');
 const fs = require('fs');
+const path = require('path')
 
 module.exports = class localStorage {
   static _storeOne(file, format) {
     let filepath = '', relpath = '';
     let isExisted = true;
     while (isExisted) {
-      relpath = `/${ioHelper.generatePath(format, file.originalname)}`;
+      relpath = ioHelper.generatePath(format, file.originalname);
+      if (!relpath.startsWith('/')) {
+        relpath = '/' + relpath
+      }
       filepath = CFG.UPLOAD_PATH + relpath;
+      const dir = path.dirname(filepath)
+      if (!ioHelper.isDirExists(dir)) {
+        ioHelper.mkdirs(dir)
+      }
       if (!ioHelper.isFileExists(filepath)) {
         isExisted = false;
         ioHelper.moveFile(file.path, filepath);
