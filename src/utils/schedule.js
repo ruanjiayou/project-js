@@ -9,6 +9,7 @@ class Schedule {
         active: false,
         runing: false,
         name,
+        cron: schedule.time,
         job: new Job(schedule.time, function () {
           const task = Schedule.tasks[name];
           const task_name = task.name;

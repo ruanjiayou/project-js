@@ -32,8 +32,10 @@ module.exports = {
       [CFG.RES_MESSAGE]: '',
       [CFG.RES_STACK]: null,
     };
-    if (!_.isEmpty(err)) {
-      res[CFG.RES_CODE] = err.code;
+    if (err instanceof String) {
+      res[CFG.RES_MESSAGE] = err
+    } else if (!_.isEmpty(err)) {
+      res[CFG.RES_CODE] = err.code || -1;
       res[CFG.RES_MESSAGE] = err.message;
       res[CFG.RES_STACK] = err.stack;
     }
