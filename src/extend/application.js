@@ -20,12 +20,6 @@ module.exports = {
   get errorsCode() {
     return scanner(this.config.ERRORS_CODE_PATH);
   },
-  mount(name, fn) {
-    mounts[name] = fn;
-  },
-  mounted(name) {
-    return mounts[name];
-  },
   // 挂载路由
   dispatch(cb) {
     let app = this;

@@ -19,7 +19,7 @@ module.exports = {
     if (params) {
       _.assign(res, params);
     }
-    return res;
+    this.json(res)
   },
   /**
    * 返回失败
@@ -40,7 +40,7 @@ module.exports = {
         res[CFG.RES_STACK] = err.stack;
       }
     }
-    return res;
+    this.json(res)
   },
   // 处理错误业务码和内部错误
   error(err) {

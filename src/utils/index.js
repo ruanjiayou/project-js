@@ -2,13 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const crypto = require('crypto');
-// excel简单解析和创建
-const excel = require('./excel');
 
 module.exports = {
-  get excelHelper() {
-    return excel
-  },
   /**
    * 根据格式生成path
    * @param {date} date 日期

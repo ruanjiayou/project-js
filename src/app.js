@@ -21,7 +21,6 @@ Object.defineProperty(global, 'CFG', {
   enumerable: true,
   configurable: false
 });
-app.utils = {};
 app.extend = function (obj, bind = false) {
   for (let fn in obj) {
     app[fn] = obj[fn];
@@ -30,14 +29,6 @@ app.extend = function (obj, bind = false) {
     }
   }
 };
-app.extendUtils = function (obj, bind = false) {
-  for (let fn in obj) {
-    app.utils[fn] = obj[fn];
-    if (typeof obj[fn] === 'function' && bind) {
-      app.utils[fn].bind(this);
-    }
-  }
-}
 app.define = function (key, value) {
   global.CFG[key] = value;
 };
@@ -55,7 +46,6 @@ app.defineMulti(require(`../config/config.${process.env.NODE_ENV}`));
 // 框架加载
 app.extend(require('./plugins'), true);
 app.extend(require('./extend/application'), true);
-app.extendUtils(require('./utils'), true);
 app.loadRoutes(__dirname + '/routes');
 
 /**

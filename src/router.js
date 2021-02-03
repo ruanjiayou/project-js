@@ -40,18 +40,21 @@ module.exports = function (dir) {
     dir: path.normalize(dir),
     recusive: true
   }, function (info) {
-    let route = require(info.fullpath);
-    Object.keys(route).forEach(key => {
-      // 转化为可以排序的对象
-      const [method, apipath] = key.split(' ');
-      //app[method](apipath, route[key]);
-      const o = {
-        type: method.toLowerCase(),
-        path: apipath,
-        handle: route[key]
-      };
-      app.routes.push(o);
-    });
+    let routeFn = require(info.fullpath);
+    if (typeof routeFn === 'function') {
+      const route = routeFn(app)
+      Object.keys(route).forEach(key => {
+        // 转化为可以排序的对象
+        const [method, apipath] = key.split(' ');
+        //app[method](apipath, route[key]);
+        const o = {
+          type: method.toLowerCase(),
+          path: apipath,
+          handle: route[key]
+        };
+        app.routes.push(o);
+      });
+    }
   });
   // 排序
   adjustRoutes(app.routes);
