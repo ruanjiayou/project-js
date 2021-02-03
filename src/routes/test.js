@@ -117,7 +117,7 @@ module.exports = {
    * @apiGroup xlsx
    */
   'get /test/excel': async function (req, res, next) {
-    return this.utils.excel.parse(path.normalize(this.config.ROOT_PATH + '/test/test.xlsx'));
+    return this.utils.excelHelper.parse(path.normalize(this.config.ROOT_PATH + '/test/test.xlsx'));
   },
   /**
    * @api post /test/excel
@@ -125,7 +125,7 @@ module.exports = {
    */
   'post /test/excel': async function (req, res, next) {
     const filepath = `${this.config.UPLOAD_PATH}/test.xlsx`;
-    this.utils.excel.create(filepath, req.body);
+    this.utils.excelHelper.create(filepath, req.body);
     return filepath;
   },
   /**

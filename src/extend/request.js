@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const store = require('../utils/localStorage');
+const store = require('../plugins/localStorage');
 
 module.exports = {
   /**

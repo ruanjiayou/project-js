@@ -30,14 +30,15 @@ module.exports = {
       [CFG.RES_STATUS]: CFG.RES_FAIL,
       [CFG.RES_CODE]: -1,
       [CFG.RES_MESSAGE]: '',
-      [CFG.RES_STACK]: null,
     };
     if (err instanceof String) {
       res[CFG.RES_MESSAGE] = err
     } else if (!_.isEmpty(err)) {
       res[CFG.RES_CODE] = err.code || -1;
       res[CFG.RES_MESSAGE] = err.message;
-      res[CFG.RES_STACK] = err.stack;
+      if (err.stack) {
+        res[CFG.RES_STACK] = err.stack;
+      }
     }
     return res;
   },
