@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path')
 
 module.exports = class localStorage {
-  static _storeOne(file, format) {
+  static _storeOne(file, format, dirpath) {
     let filepath = '', relpath = '';
     let isExisted = true;
     while (isExisted) {
@@ -11,7 +11,7 @@ module.exports = class localStorage {
       if (!relpath.startsWith('/')) {
         relpath = '/' + relpath
       }
-      filepath = CFG.UPLOAD_PATH + relpath;
+      filepath = dirpath + relpath;
       const dir = path.dirname(filepath)
       if (!ioHelper.isDirExists(dir)) {
         ioHelper.mkdirs(dir)
@@ -23,14 +23,14 @@ module.exports = class localStorage {
     }
     return relpath;
   }
-  static async create(files, format) {
+  static async create(files, format, dirpath = CFG.UPLOAD_PATH) {
     const res = {};
     for (let i = 0; i < files.length; i++) {
       const field = files[i].fieldname;
       if (format[field] === undefined) {
         continue;
       }
-      let relpath = localStorage._storeOne(files[i], format[field]);
+      let relpath = localStorage._storeOne(files[i], format[field], dirpath);
       res[field] = relpath;
     }
     return res;
