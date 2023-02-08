@@ -6,10 +6,9 @@ module.exports = {
    * 上传文件
    * @param {string} format 保存格式
    * @param {string} type 存储策略
-   * @param {string} dirpath 目录
    */
-  async upload(format, dirpath) {
-    const files = store.create(this.files, format, dirpath);
+  async upload(format, dir) {
+    const files = store.create(this.files, format, dir);
     if (_.isEmpty(this.body)) {
       this.body = {};
     }

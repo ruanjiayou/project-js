@@ -7,4 +7,3 @@
 
 ## 改进
 - gulp命令在实例中有问题
-- plugins/utils拆分

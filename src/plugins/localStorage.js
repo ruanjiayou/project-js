@@ -23,14 +23,14 @@ module.exports = class localStorage {
     }
     return relpath;
   }
-  static async create(files, format, dirpath = CFG.UPLOAD_PATH) {
+  static async create(files, format, dir = CFG.UPLOAD_PATH) {
     const res = {};
     for (let i = 0; i < files.length; i++) {
       const field = files[i].fieldname;
       if (format[field] === undefined) {
         continue;
       }
-      let relpath = localStorage._storeOne(files[i], format[field], dirpath);
+      let relpath = localStorage._storeOne(files[i], format[field], dir);
       res[field] = relpath;
     }
     return res;

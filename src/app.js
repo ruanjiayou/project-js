@@ -142,7 +142,14 @@ app.run = async function (cb, callback) {
   this.use(require('./middlewares/cors').bind(this));
 
   // .静态目录
-  this.use(express.static(this.config.STATIC_PATH));
+  if (this.config.STATIC_PATH instanceof Array) {
+    this.config.STATIC_PATH.forEach(static_path => {
+      this.use(express.static(static_path));
+    })
+  } else {
+    this.use(express.static(this.config.STATIC_PATH));
+  }
+
 
   // .请求限制的处理
   this.use(express.json({ limit: this.config.UPLOAD.fileSize }));

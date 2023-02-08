@@ -19,6 +19,7 @@ class Schedule {
             task.runing = false;
           }).catch(function (e) {
             task.runing = false;
+            console.log(e)
             console.log(`schedule ${task_name} error:${e.message}`);
           });
         }, null, false, 'Asia/Shanghai')
@@ -41,7 +42,11 @@ class Schedule {
   // 手动触发一次
   static tick(name) {
     if (!Schedule.isRuning(name)) {
-      Schedule.tasks[name].job.fireOnTick();
+      try {
+        Schedule.tasks[name].job.fireOnTick();
+      } catch (e) {
+        console.log(e)
+      }
       return true;
     }
     return false;

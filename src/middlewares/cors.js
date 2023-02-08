@@ -12,6 +12,11 @@ module.exports = function (req, res, next) {
   if (req.method === 'OPTIONS') {
     res.end();
   } else {
+    const accept = req.headers['accept'] || '';
+    const dest = req.headers['sec-fetch-dest'] || ''
+    if (accept.includes('image/') || dest === 'image') {
+      res.header('X-Cacheable', 'true')
+    }
     next();
   }
 };
