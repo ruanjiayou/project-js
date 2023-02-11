@@ -11,10 +11,7 @@ module.exports = class localStorage {
       if (!relpath.startsWith('/')) {
         relpath = '/' + relpath
       }
-      // Error: EXDEV: cross-device link not permitted, rename
-      // filepath = dirpath + relpath;
-      fs.copyFileSync(oldPath, newPath);
-      fs.unlinkSync(oldPath);
+      filepath = path.normalize(dirpath + relpath);
       const dir = path.dirname(filepath)
       if (!ioHelper.isDirExists(dir)) {
         ioHelper.mkdirs(dir)

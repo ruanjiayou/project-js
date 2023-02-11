@@ -241,7 +241,10 @@ module.exports = {
     if (!this.isDirExists(dir)) {
       this.mkdirs(dir);
     }
-    fs.renameSync(oldPath, newPath);
+    // fs.renameSync(oldPath, newPath);
+    // Error: EXDEV: cross-device link not permitted, rename
+    fs.copyFileSync(oldPath, newPath);
+    fs.unlinkSync(oldPath);
     return true;
   },
   /**
